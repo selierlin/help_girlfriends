@@ -3,7 +3,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 from apscheduler.executors.pool import ProcessPoolExecutor
 from controller import bp
-from pytz import utc
+from pytz import timezone
 
 from myStores import MyJobStore
 
@@ -26,8 +26,11 @@ def createAPP():
     app = Flask(__name__)
     app.config['JSON_AS_ASCII'] = False
     scheduler = BackgroundScheduler()
+    # 创建带有时区信息的 pytz.timezone 对象
+    beijing_tz = timezone('Asia/Shanghai')
+    # 创建后台调度器对象，并将时区设置为北京时间
     scheduler.configure(jobstores=jobstores, executors=executors, job_defaults=job_defaults,
-                        timezone=utc)  # utc作为调度程序的时区
+                        timezone=beijing_tz)  # utc作为调度程序的时区
     # 启动调度器
     scheduler.start()
     app.config['scheduler'] = scheduler

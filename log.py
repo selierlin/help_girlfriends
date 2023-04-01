@@ -2,7 +2,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
-
+logging.getLogger('apscheduler').setLevel(logging.DEBUG)
 # 创建文件处理器
 file_handler = logging.FileHandler('help_gf.log')
 file_handler.setLevel(logging.DEBUG)

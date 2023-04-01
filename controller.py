@@ -1,6 +1,6 @@
 import response
 
-from flask import Blueprint, request, current_app
+from flask import Blueprint, request
 import job
 from log import logger
 
@@ -12,12 +12,21 @@ def api():
     return response.success()
 
 
-@bp.route('/job/add', methods=['POST', 'GET'])
+@bp.route('/job/add', methods=['POST'])
 def addJob():
     openid = request.form.get("openid")
     title = request.form.get("title")
     msg = request.form.get("msg")
     return job.addJob(openid, title, msg)
+
+
+@bp.route('/job/update', methods=['POST'])
+def updateJob():
+    jobId = request.form.get("jobId")
+    openid = request.form.get("openid")
+    title = request.form.get("title")
+    msg = request.form.get("msg")
+    return job.updateJob(jobId, openid, title, msg)
 
 
 @bp.route('/job/list', methods=['GET'])
