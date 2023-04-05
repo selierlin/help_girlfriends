@@ -5,7 +5,7 @@ from apscheduler.executors.pool import ProcessPoolExecutor
 import config
 from controller import bp
 from pytz import timezone
-from db import Db
+from db import InitDb
 
 # 创建Flask
 app = Flask(__name__)
