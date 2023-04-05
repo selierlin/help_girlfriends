@@ -2,16 +2,21 @@ from flask import Flask
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 from apscheduler.executors.pool import ProcessPoolExecutor
+import config
 from controller import bp
 from pytz import timezone
+from db import Db
 
-from myStores import MyJobStore
-
+# 创建Flask
+app = Flask(__name__)
+app.debug = True
+# 加载配置
+config.load_config()
 jobstores = {
     # 可以配置多个存储
     # 'mongo': {'type': 'mongodb'},
     # 'default': MyJobStore(url='sqlite:///jobs.sqlite')  # SQLAlchemyJobStore指定存储链接
-    'default': SQLAlchemyJobStore(url='sqlite:///jobs.sqlite')  # SQLAlchemyJobStore指定存储链接
+    'default': SQLAlchemyJobStore(url=f'sqlite:///{config.conf().get("db_path")}')  # SQLAlchemyJobStore指定存储链接
 }
 executors = {
     'default': {'type': 'threadpool', 'max_workers': 20},  # 最大工作线程数20
@@ -22,8 +27,8 @@ job_defaults = {
     'max_instances': 10  # 并发运行新job默认最大实例多少
 }
 
+
 def createAPP():
-    app = Flask(__name__)
     app.config['JSON_AS_ASCII'] = False
     scheduler = BackgroundScheduler()
     # 创建带有时区信息的 pytz.timezone 对象
@@ -38,6 +43,7 @@ def createAPP():
     return app
 
 
+createAPP()
+Db.initTable()
 if __name__ == '__main__':
-    app = createAPP()
-    app.run(debug=True)
+    app.run()

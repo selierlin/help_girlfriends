@@ -1,3 +1,0 @@
-
-def analyzer(msg):
-    pass

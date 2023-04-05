@@ -1,3 +1,5 @@
 /jobs.sqlite
 .idea
 *.log
+config.json
+*.db

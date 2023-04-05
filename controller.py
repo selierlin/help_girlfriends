@@ -9,7 +9,7 @@ bp = Blueprint('main', __name__)
 
 @bp.route('/')
 def api():
-    return response.success()
+    return response.success(msg='hello my lady')
 
 
 @bp.route('/job/add', methods=['POST'])
