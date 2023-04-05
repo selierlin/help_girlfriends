@@ -44,6 +44,6 @@ def createAPP():
 
 
 createAPP()
-Db.initTable()
+InitDb.initTable()
 if __name__ == '__main__':
     app.run()
