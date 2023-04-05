@@ -7,6 +7,7 @@ import response
 import random
 from cron.parse1 import ExtractStrategy
 
+
 def addJob(openid, title, msg):
     if not all([openid, title, msg]):
         # 如果任意一个为空，则执行相应的操作
@@ -15,7 +16,7 @@ def addJob(openid, title, msg):
         scheduler = current_app.config['scheduler']
         current = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         kwargs = {'openid': openid, 'title': title, 'msg': msg, 'create_time': current}
-        extract, action = ExtractStrategy.extract(input_str=msg, nickname='我')
+        extract, action = ExtractStrategy.extract(msg, '我')
         if extract:
             scheduler.add_job(id=f'{openid}_{random.randrange(100, 1000)}', func=sendNotify, trigger=extract['trigger'],
                               name=title,
