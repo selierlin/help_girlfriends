@@ -5,7 +5,7 @@ from notify import sendNotify
 from datetime import datetime
 import response
 import random
-from cron.parse1 import ExtractStrategy
+from cron.ChineseParse import ExtractStrategy
 
 
 def addJob(openid, title, msg):
