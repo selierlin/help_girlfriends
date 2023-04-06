@@ -1,3 +1,5 @@
 {
-  "db_path": "/Users/selier/Project/help_girlfriends/jobs.db"
+  "db_path": "/Users/selier/Project/help_girlfriends/jobs.db",
+  "port": 520,
+  "we_token": "xxx"
 }

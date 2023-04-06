@@ -7,11 +7,14 @@ def sendNotify(openid, title, msg, create_time):
 
 
 def pushDeer(pushkey, title, msg):
-    pushdeer = PushDeer(pushkey=pushkey)
-    pushdeer.send_markdown(title, desp=
-    f'''
-        ### {msg}
-    ''')
+    try:
+        pushdeer = PushDeer(pushkey=pushkey)
+        pushdeer.send_markdown(title, desp=
+        f'''
+            ### {msg}
+        ''')
+    except Exception as e:
+        logger.error(f'key[{pushkey}] is valid')
 
 
 if __name__ == '__main__':

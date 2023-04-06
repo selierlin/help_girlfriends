@@ -3,3 +3,4 @@
 *.log
 config.json
 *.db
+*.sqlite3
