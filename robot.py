@@ -4,7 +4,9 @@ from werobot.messages.messages import ImageMessage
 from werobot.replies import ImageReply
 import re
 import config
+import job
 import notify
+from cron import ChineseParse
 from db import UsersNotify, Users
 from log import logger
 
@@ -73,23 +75,24 @@ def unbind(message):
     return "解绑失败，可能原因：未绑定该key"
 
 
-@myRobot.filter("图片")
-def send_custom_image(message):
-    # 从本地读取图片
-    with open('/Users/selier/Pictures/bg/iss067e302248.jpeg', 'rb') as f:
-        image_data = f.read()
-
-    return_json = Client.upload_media(media_type="image", media_file=image_data)
-    mediaid = return_json["media_id"]
-
-    # 创建 ImageMessage 对象
-    image_message = ImageMessage(media_id=None, media_file=image_data)
-    # 发送图片消息
-    return image_message
-
-
 @myRobot.text
 def hello(message):
     logger.info(
         f'openid={message.source}, message={message.content}, createTime={message.CreateTime}, msgId={message.MsgId}')
-    return 'Hello World!'
+    return job.parseJob(message.source, message.content)
+
+#
+# @myRobot.filter("图片")
+# def send_custom_image(message):
+#     # 从本地读取图片
+#     with open('/Users/selier/Pictures/bg/iss067e302248.jpeg', 'rb') as f:
+#         image_data = f.read()
+#
+#     return_json = Client.upload_media(media_type="image", media_file=image_data)
+#     mediaid = return_json["media_id"]
+#
+#     # 创建 ImageMessage 对象
+#     image_message = ImageMessage(media_id=None, media_file=image_data)
+#     # 发送图片消息
+#     return image_message
+#

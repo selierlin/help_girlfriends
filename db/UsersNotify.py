@@ -43,3 +43,19 @@ def delete(openid, notify_type, notify_key):
     except Exception as e:
         logger.error(e)
         return -1
+
+
+def find(openid):
+    try:
+        conn = InitDb.getConnect()
+        cursor = conn.cursor()
+        select_sql = f"SELECT * FROM {InitDb.usersNotifyTableName} where openid = ?"
+        cursor.execute(select_sql, (openid,))
+        result = cursor.fetchall()
+        conn.commit()
+        rowcount = cursor.rowcount
+        cursor.close()
+        return result
+    except Exception as e:
+        logger.error(e)
+        return None

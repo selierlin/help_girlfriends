@@ -1,10 +1,23 @@
 import logging
 
+import os
+
+
+def get_project_dir():
+    # 获取当前文件的绝对路径
+    current_path = os.path.abspath(__file__)
+    # 获取当前文件所在的目录
+    current_dir = os.path.dirname(current_path)
+    # 获取项目的根目录
+    project_dir = os.path.dirname(current_dir)
+    return project_dir
+
+
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 logging.getLogger('apscheduler').setLevel(logging.DEBUG)
 # 创建文件处理器
-file_handler = logging.FileHandler('help_gf.log')
+file_handler = logging.FileHandler(get_project_dir() + '/help_gf.log')
 file_handler.setLevel(logging.DEBUG)
 
 # 创建控制台处理器
