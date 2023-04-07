@@ -8,10 +8,14 @@ usersTableName = 'users'
 usersNotifyTableName = 'users_notify'
 
 
+def getConnect():
+    return sqlite3.connect(config.conf().get("db_path"))
+
+
 def initTable():
     logger.info("开始初始化表")
+    conn = getConnect()
     # 连接到 jobs.db 数据库
-    conn = sqlite3.connect(config.conf().get("db_path"))
     cursor = conn.cursor()
     # 初始化表
     initUsers(conn, cursor)
@@ -73,8 +77,8 @@ def createUsersNotify(conn, cursor, tableName):
                 CREATE TABLE {tableName} (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     openid TEXT NOT NULL,
-                    notity_type INTEGER NOT NULL,
-                    notity_key TEXT NOT NULL,
+                    notify_type INTEGER NOT NULL,
+                    notify_key TEXT NOT NULL,
                     tags TEXT NOT NULL,
                     is_enable INTEGER NOT NULL DEFAULT 1,
                     create_time DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -90,5 +94,9 @@ def createUsersNotify(conn, cursor, tableName):
                     UPDATE {tableName} SET update_time = DATETIME('NOW') WHERE id = NEW.id;
                 END;
             ''')
+
+    # 设置 openid notify_type notify_key 联合唯一索引
+    cursor.execute(f"CREATE UNIQUE INDEX IF NOT EXISTS idx_notify ON {tableName} (openid, notify_type, notify_key)")
+
     conn.commit()
     logger.info(f'表 {tableName} 创建成功')
