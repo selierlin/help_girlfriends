@@ -59,6 +59,10 @@ def createUsers(conn, cursor, tableName):
                     UPDATE {tableName} SET update_time = DATETIME('NOW') WHERE id = NEW.id;
                 END;
             ''')
+
+    # 设置 openid 唯一索引
+    cursor.execute(f"CREATE UNIQUE INDEX IF NOT EXISTS idx_{tableName}_notify ON {tableName} (openid)")
+
     conn.commit()
     logger.info(f'表 {tableName} 创建成功')
 
@@ -96,7 +100,8 @@ def createUsersNotify(conn, cursor, tableName):
             ''')
 
     # 设置 openid notify_type notify_key 联合唯一索引
-    cursor.execute(f"CREATE UNIQUE INDEX IF NOT EXISTS idx_notify ON {tableName} (openid, notify_type, notify_key)")
+    cursor.execute(
+        f"CREATE UNIQUE INDEX IF NOT EXISTS idx_{tableName}_notify ON {tableName} (openid, notify_type, notify_key)")
 
     conn.commit()
     logger.info(f'表 {tableName} 创建成功')

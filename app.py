@@ -2,7 +2,6 @@ from flask import Flask
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 from apscheduler.executors.pool import ProcessPoolExecutor
-import log
 import config
 from controller import controller
 from pytz import timezone
@@ -42,8 +41,6 @@ app.config['JSON_AS_ASCII'] = False
 # 加载配置
 jobstores = {
     # 可以配置多个存储
-    # 'mongo': {'type': 'mongodb'},
-    # 'default': MyJobStore(url='sqlite:///jobs.sqlite')  # SQLAlchemyJobStore指定存储链接
     'default': SQLAlchemyJobStore(url=f'sqlite:///{config.conf().get("db_path")}')  # SQLAlchemyJobStore指定存储链接
 }
 executors = {

@@ -5,7 +5,7 @@ from werobot.replies import ImageReply
 import re
 import config
 import notify
-from db import UsersNotify
+from db import UsersNotify, Users
 from log import logger
 
 myRobot = WeRoBot(token=config.conf().get('we_token'))
@@ -17,6 +17,7 @@ myRobot.config["APP_SECRET"] = config.conf().get("APP_SECRET")
 @myRobot.subscribe
 def subscribe(message):
     logger.info(f'subscribe openid={message.source}, createTime={message.CreateTime}')
+    Users.add(message.source)
     return 'Hello My Friend!'
 
 
@@ -91,5 +92,4 @@ def send_custom_image(message):
 def hello(message):
     logger.info(
         f'openid={message.source}, message={message.content}, createTime={message.CreateTime}, msgId={message.MsgId}')
-
     return 'Hello World!'
