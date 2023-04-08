@@ -37,9 +37,11 @@ def show_help(message):
 示例：绑定 abcabcabc 我,本人
 【2】回复：解绑 key。即可删除接收人
 示例：解绑 abcabcabc
-【3】回复提醒内容即可触发定时推送
+【3】回复：提醒内容即可触发定时推送
 示例：明天15点提醒我出门
 效果：明天15点就会推送消息给标签为"我"的手机上
+【4】回复：获取key
+效果：将会发送你一张图片
 
 PS：多个标签需要用","隔开
 目前仅支持 PushDeer
@@ -49,7 +51,7 @@ PS：多个标签需要用","隔开
 @myRobot.filter(re.compile("绑定.*"))
 def bind(message):
     logger.info(
-        f'openid={message.source}, message={message.content}, createTime={message.CreateTime}, msgId={message.MsgId}')
+        f'openid={message.source}, message=【{message.content}】, createTime={message.CreateTime}, msgId={message.MsgId}')
     words = message.content.split()
     if len(words) != 3:
         return "格式不规范"
@@ -57,7 +59,11 @@ def bind(message):
     logger.info(words)
     result = UsersNotify.add(message.source, 1, words[1], words[2])
     if result:
+        logger.info(
+            f'绑定成功 openid={message.source}, message=【{message.content}】, createTime={message.CreateTime}, msgId={message.MsgId}')
         return "绑定成功"
+    logger.info(
+        f'绑定失败 openid={message.source}, message=【{message.content}】, createTime={message.CreateTime}, msgId={message.MsgId}')
     return "绑定失败，可能原因：重复绑定"
 
 
@@ -71,15 +77,22 @@ def unbind(message):
     logger.info(words)
     result = UsersNotify.delete(message.source, 1, words[1])
     if result > 0:
+        logger.info(
+            f'解绑成功 openid={message.source}, message={message.content}, createTime={message.CreateTime}, msgId={message.MsgId}')
         return "解绑成功"
+    logger.info(
+        f'解绑失败 openid={message.source}, message={message.content}, createTime={message.CreateTime}, msgId={message.MsgId}')
     return "解绑失败，可能原因：未绑定该key"
 
 
 @myRobot.text
 def hello(message):
     logger.info(
-        f'openid={message.source}, message={message.content}, createTime={message.CreateTime}, msgId={message.MsgId}')
-    return job.parse_job(message.source, message.content)
+        f'解析任务 openid={message.source}, message={message.content}, createTime={message.CreateTime}, msgId={message.MsgId}')
+    parse_job = job.parse_job(message.source, message.content)
+    logger.info(
+        f'解析结果：[{parse_job}] openid={message.source}, message={message.content}, createTime={message.CreateTime}, msgId={message.MsgId}')
+    return parse_job
 
 #
 # @myRobot.filter("图片")

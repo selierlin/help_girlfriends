@@ -28,7 +28,7 @@ class ExtractStrategy:
                 action = match.group('action')
                 return deal_data, action
             # 每天X点，使用 cron 表达式执行处理
-            pattern = fr'(每天|每)\s*{day_key}{hour_key}{minute_key}{tip_key}{action_key}'
+            pattern = fr'(每天|每)\s*{day_key}{hour_key}{minute_key}{second_key}{tip_key}{action_key}'
             match = re.match(pattern, message)
             if match:
                 day = int(match.group('day') or 0)
@@ -37,8 +37,8 @@ class ExtractStrategy:
                 deal_data = {'day': day, 'hour': hour, 'minute': minute, 'trigger': 'cron'}
                 action = match.group('action')
                 return deal_data, action
-            # 今天、明天、后天、一个小时后、5分钟后的关键字，使用 date 执行处理
-            pattern = fr'((?P<day>.+?天|日))?\s*{hour_key}{minute_key}{tip_key}{action_key}'
+            # 今天、明天、后天、大后天的关键字，使用 date 执行处理
+            pattern = fr'((?P<day>.+?天|日))?\s*{hour_key}{minute_key}{second_key}{tip_key}{action_key}'
             match = re.match(pattern, message)
             if match:
                 hour = int(match.group('hour') or 9)

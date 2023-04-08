@@ -15,5 +15,5 @@ def parse(users_notify, action):
                 temp['action'] = action.replace(tag, '')
                 result.append(temp)
                 break
-    logger.info(f'user result={result}')
+    logger.info(f'解析用户指令 user result={result}')
     return result

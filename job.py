@@ -5,7 +5,7 @@ from flask import current_app
 from cron import ActionStrategy
 from db import UsersNotify
 from log import logger
-from notify import sendNotify
+from notify import send_notify
 from datetime import datetime
 import response
 import random
@@ -23,7 +23,7 @@ def parse_job(openid, message):
             actions = ActionStrategy.parse(users_notify, action)
             for action in actions:
                 print(f"{deal_data} {action} {message}")
-                res = add_job(openid, deal_data, action['action'])
+                res = add_job(openid, deal_data, action)
                 if response.is_fail(res):
                     return "任务处理失败"
             return "收到🫡"
@@ -39,7 +39,12 @@ def add_job(openid, deal_data, action):
     try:
         scheduler = current_app.config['scheduler']
         current = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        kwargs = {'openid': openid, 'title': action, 'msg': action, 'create_time': current}
+        action_content = action['action']
+        notify_type = action['notify_type']
+        notify_key = action['notify_key']
+        kwargs = {'openid': openid, 'title': action_content, 'msg': action_content, 'create_time': current,
+                  'notify_type': notify_type,
+                  'notify_key': notify_key, }
         my_trigger = None
         if deal_data['trigger'] == 'cron' or deal_data['trigger'] == 'date':
             my_trigger = CronTrigger(year=deal_data['year'], month=deal_data['month'], day=deal_data['day'],
@@ -52,10 +57,10 @@ def add_job(openid, deal_data, action):
             pass
 
         job_id = f'{openid}_{random.randrange(100, 1000)}'
-        scheduler.add_job(id=job_id, func=sendNotify, trigger=my_trigger,
-                          name=action,
+        scheduler.add_job(id=job_id, func=send_notify, trigger=my_trigger,
+                          name=action_content,
                           kwargs=kwargs)
-        logger.info(f'添加任务成功 openid={openid}, job_id={job_id}, action={action}, kwargs={kwargs}')
+        logger.info(f'添加任务成功 openid={openid}, job_id={job_id}, kwargs={kwargs}')
         return response.success()
     except Exception as e:
         logger.error(e)
@@ -70,7 +75,7 @@ def update_job(job_id, openid, title, msg):
         scheduler = current_app.config['scheduler']
         current = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         kwargs = {'openid': openid, 'title': title, 'msg': msg, 'create_time': current}
-        scheduler.add_job(id=job_id, func=sendNotify, trigger='interval', name=title,
+        scheduler.add_job(id=job_id, func=send_notify, trigger='interval', name=title,
                           seconds=5,
                           kwargs=kwargs, replace_existing=True)
         return response.success()
