@@ -79,7 +79,7 @@ def unbind(message):
 def hello(message):
     logger.info(
         f'openid={message.source}, message={message.content}, createTime={message.CreateTime}, msgId={message.MsgId}')
-    return job.parseJob(message.source, message.content)
+    return job.parse_job(message.source, message.content)
 
 #
 # @myRobot.filter("图片")

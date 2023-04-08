@@ -17,13 +17,14 @@ class ExtractStrategy:
         deal_data = None
         try:
             # 每隔、每小时、每分钟关键字，使用 interval 执行处理
-            pattern = fr'(每隔|每)\s*{day_key}{hour_key}{minute_key}{tip_key}{action_key}'
+            pattern = fr'(每隔|每)\s*{day_key}{hour_key}{minute_key}{second_key}{tip_key}{action_key}'
             match = re.match(pattern, message)
             if match:
                 day = int(match.group('day') or 0)
                 hour = int(match.group('hour') or 0)
                 minute = int(match.group('minute') or 0)
-                deal_data = {'day': day, 'hour': hour, 'minute': minute, 'trigger': 'interval'}
+                second = int(match.group('second') or 0)
+                deal_data = {'day': day, 'hour': hour, 'minute': minute, 'second': second, 'trigger': 'interval'}
                 action = match.group('action')
                 return deal_data, action
             # 每天X点，使用 cron 表达式执行处理

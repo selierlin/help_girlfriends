@@ -1,9 +1,18 @@
 from flask import jsonify
 
+SUCCESS_CODE = 200
 
-def success(code=200, msg='操作成功', data={}):
-    return jsonify({'code': code, 'data': data, 'msg': msg})
+
+def success(code=SUCCESS_CODE, msg='操作成功', data={}):
+    return {'code': code, 'data': data, 'msg': msg}
 
 
 def fail(code=404, msg='操作失败', data={}):
-    return jsonify({'code': code, 'data': data, 'msg': msg})
+    return {'code': code, 'data': data, 'msg': msg}
+
+
+def is_success(self):
+    return self['code'] == SUCCESS_CODE
+
+def is_fail(self):
+    return self['code'] != SUCCESS_CODE

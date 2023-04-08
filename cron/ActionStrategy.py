@@ -2,14 +2,18 @@ from log import logger
 
 
 def parse(users_notify, action):
-    logger.info(f'action={action}')
     result = []
     for user in users_notify:
-        tags = user[3].split(',')
+        tags = user[4].split(',')
         for tag in tags:
             if action.startswith(tag):
-                user['action'] = action.replace(tag, '')
-                result.append(user)
-                logger.info(f'user={user}')
+                temp = {}
+                temp['openid'] = user[1]
+                temp['notify_type'] = user[2]
+                temp['notify_key'] = user[3]
+                temp['tags'] = user[4]
+                temp['action'] = action.replace(tag, '')
+                result.append(temp)
                 break
+    logger.info(f'user result={result}')
     return result
