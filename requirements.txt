@@ -1,0 +1,6 @@
+APScheduler==3.10.0
+Flask==2.2.3
+pypushdeer==0.0.3
+pytz==2022.7.1
+SQLAlchemy==2.0.8
+WeRoBot==1.13.1
