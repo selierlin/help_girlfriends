@@ -13,15 +13,19 @@ from cron.ChineseParse import ExtractStrategy
 
 def parseJob(openid, message):
     users_notify = UsersNotify.find(openid)
-    if users_notify is None or len(users_notify) > 0:
+    if users_notify is None or len(users_notify) == 0:
         return '你还没有绑定的key，请回复"帮助"进行绑定'
     extracted_data = ExtractStrategy.extract(message)
     if extracted_data:
-        delta_minute, action = extracted_data
-        action = ActionStrategy.parse(users_notify, action)
-        print(f"{delta_minute} {action} {message}")
+        try:
+            delta_minute, action = extracted_data
+            action = ActionStrategy.parse(users_notify, action)
+            print(f"{delta_minute} {action} {message}")
+            return "收到🫡"
+        except Exception:
+            return "无法识别任务信息"
     else:
-        print("无法识别任务信息")
+        return "无法识别任务信息"
 
 
 def addJob(openid, title, msg):
