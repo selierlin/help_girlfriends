@@ -52,22 +52,21 @@ help_girlfriends 是一款基于微信公众号和推送通知的应用，旨在
 1. Linux服务器
 
 ### 部署
+如果您想自行搭建该应用，请按照以下步骤操作：
 
-#### 克隆项目
+1. 克隆项目代码：
 
 ```shell
 git clone https://github.com/selierlin/help_girlfriends
 ```
 
-#### 配置说明
-
-核心配置文件为 `config.json`，在项目中提供了模板文件 `config-template.json` ，可以从模板复制生成最终生效的 `config.json` 文件：
+2. 复制项目中的模板文件，生成最终的配置文件：
 
 ```shell
 cp config-template.json config.json
 ```
 
-说明
+在 `config.json` 文件中，您需要配置微信公众号的 `TOKEN`、`APP_ID`、`APP_SECRET`，以及应用的 `port` 和 `debug` 模式。参考以下说明：
 
 ```json
 {
@@ -80,23 +79,23 @@ cp config-template.json config.json
 }
 ```
 
-#### 安装依赖
+3. 安装依赖：
 
 ```shell
 pip install -r requirements.txt
 ```
 
-#### 启动
+4. 启动应用：
 
 ```shell
 python app.py
 ```
 
-启动完后，浏览器打开链接：http://你的服务器IP/robot/ 。 当看到werobot页面说明启动成功
+启动成功后，您可以在浏览器中打开 `http://your_server_IP/robot/`，如果看到Werobot页面，则说明启动成功。
 
-#### 配置公众号
+5. 在微信公众号中配置IP白名单和服务器地址，使公众号能够请求您的服务器。
 
-##### 配置IP白名单及服务器URL
+配置完成后，您就可以使用您的公众号发送指令，实现女朋友的定时提醒服务并养成良好的生活习惯。
 
 ![image-20230409141320513](assets/image-20230409141320513.png)
 
