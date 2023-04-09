@@ -11,7 +11,7 @@ from werobot.contrib.flask import make_view
 from robot import myRobot
 
 
-def createScheduler():
+def create_scheduler():
     scheduler = BackgroundScheduler()
     # 创建带有时区信息的 pytz.timezone 对象
     beijing_tz = timezone('Asia/Shanghai')
@@ -24,7 +24,7 @@ def createScheduler():
     app.register_blueprint(controller)
 
 
-def createRobot():
+def create_robot():
     # 注册werobot对象到app中
     app.add_url_rule(rule='/robot/',  # WeRoBot 的绑定地址
                      endpoint='werobot',  # Flask 的 endpoint
@@ -52,9 +52,9 @@ job_defaults = {
     'max_instances': 10  # 并发运行新job默认最大实例多少
 }
 
-createScheduler()
-createRobot()
-InitDb.initTable()
+create_scheduler()
+create_robot()
+InitDb.init_table()
 if __name__ == '__main__':
     port = config.conf().get('port')
     app.run(host='0.0.0.0', port=port)

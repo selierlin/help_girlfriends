@@ -1,8 +1,7 @@
 from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 from sqlalchemy import (
-        create_engine, Table, Column, MetaData, Unicode, Float, LargeBinary, select, and_)
-from sqlalchemy.exc import IntegrityError
-from sqlalchemy.sql.expression import null
+    select)
+
 
 class MyJobStore(SQLAlchemyJobStore):
     def _get_jobs(self, *conditions):

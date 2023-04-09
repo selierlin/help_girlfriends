@@ -4,9 +4,9 @@ from log import logger
 
 def add(openid):
     try:
-        conn = InitDb.getConnect()
+        conn = InitDb.get_connect()
         cursor = conn.cursor()
-        insert_sql = f"INSERT INTO {InitDb.usersTableName} (openid) VALUES (?)"
+        insert_sql = f"INSERT INTO {InitDb.users_table_name} (openid) VALUES (?)"
         cursor.execute(insert_sql, (openid,))
         conn.commit()
         cursor.close()

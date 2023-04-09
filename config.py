@@ -63,6 +63,7 @@ def common_conf_val(key, default=None):
         return default
     return config.get('common').get(key, default)
 
+
 load_config()
 
 if __name__ == '__main__':

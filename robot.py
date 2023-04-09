@@ -1,12 +1,9 @@
-from werobot import WeRoBot, client
-from werobot.client import Client
-from werobot.messages.messages import ImageMessage
-from werobot.replies import ImageReply
 import re
+
+from werobot import WeRoBot
+
 import config
 import job
-import notify
-from cron import ChineseParse
 from db import UsersNotify, Users
 from log import logger
 

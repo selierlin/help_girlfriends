@@ -1,49 +1,48 @@
-import logging
 import sqlite3
 
 import config
 from log import logger
 
-usersTableName = 'users'
-usersNotifyTableName = 'users_notify'
+users_table_name = 'users'
+users_notify_table_name = 'users_notify'
 
 
-def getConnect():
+def get_connect():
     return sqlite3.connect(config.conf().get("db_path"))
 
 
-def initTable():
+def init_table():
     logger.info("开始初始化表")
-    conn = getConnect()
+    conn = get_connect()
     # 连接到 jobs.db 数据库
     cursor = conn.cursor()
     # 初始化表
-    initUsers(conn, cursor)
-    initUsersNotify(conn, cursor)
+    init_users(conn, cursor)
+    init_users_notify(conn, cursor)
     # 关闭游标和数据库连接
     cursor.close()
     conn.close()
 
 
-def initUsers(conn, cursor):
+def init_users(conn, cursor):
     # 如果 user 表不存在，则创建该表
-    if not checkTableExists(cursor, usersTableName):
-        createUsers(conn, cursor, usersTableName)
+    if not check_table_exists(cursor, users_table_name):
+        create_users(conn, cursor, users_table_name)
     else:
-        logger.info(f'表 {usersTableName} 已存在')
+        logger.info(f'表 {users_table_name} 已存在')
 
 
-def initUsersNotify(conn, cursor):
+def init_users_notify(conn, cursor):
     # 如果 user 表不存在，则创建该表
-    if not checkTableExists(cursor, usersNotifyTableName):
-        createUsersNotify(conn, cursor, usersNotifyTableName)
+    if not check_table_exists(cursor, users_notify_table_name):
+        create_users_notify(conn, cursor, users_notify_table_name)
     else:
-        logger.info(f'表 {usersNotifyTableName} 已存在')
+        logger.info(f'表 {users_notify_table_name} 已存在')
 
 
-def createUsers(conn, cursor, tableName):
+def create_users(conn, cursor, table_name):
     cursor.execute(f'''
-                CREATE TABLE {tableName} (
+                CREATE TABLE {table_name} (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     openid TEXT NOT NULL,
                     create_time DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -52,33 +51,33 @@ def createUsers(conn, cursor, tableName):
             ''')
     # 创建触发器，自动更新更新时间字段
     cursor.execute(f'''
-                CREATE TRIGGER update_{tableName}
-                AFTER UPDATE ON {tableName}
+                CREATE TRIGGER update_{table_name}
+                AFTER UPDATE ON {table_name}
                 FOR EACH ROW
                 BEGIN
-                    UPDATE {tableName} SET update_time = DATETIME('NOW') WHERE id = NEW.id;
+                    UPDATE {table_name} SET update_time = DATETIME('NOW') WHERE id = NEW.id;
                 END;
             ''')
 
     # 设置 openid 唯一索引
-    cursor.execute(f"CREATE UNIQUE INDEX IF NOT EXISTS idx_{tableName}_notify ON {tableName} (openid)")
+    cursor.execute(f"CREATE UNIQUE INDEX IF NOT EXISTS idx_{table_name}_notify ON {table_name} (openid)")
 
     conn.commit()
-    logger.info(f'表 {tableName} 创建成功')
+    logger.info(f'表 {table_name} 创建成功')
 
 
-def checkTableExists(cursor, tableName):
+def check_table_exists(cursor, table_name):
     # 判断 user 表是否存在
     cursor.execute(
         f'''
-        SELECT name FROM sqlite_master WHERE type='table' AND name='{tableName}'
+        SELECT name FROM sqlite_master WHERE type='table' AND name='{table_name}'
         ''')
     return cursor.fetchone() is not None
 
 
-def createUsersNotify(conn, cursor, tableName):
+def create_users_notify(conn, cursor, table_name):
     cursor.execute(f'''
-                CREATE TABLE {tableName} (
+                CREATE TABLE {table_name} (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     openid TEXT NOT NULL,
                     notify_type INTEGER NOT NULL,
@@ -91,17 +90,17 @@ def createUsersNotify(conn, cursor, tableName):
             ''')
     # 创建触发器，自动更新更新时间字段
     cursor.execute(f'''
-                CREATE TRIGGER update_{tableName}
-                AFTER UPDATE ON {tableName}
+                CREATE TRIGGER update_{table_name}
+                AFTER UPDATE ON {table_name}
                 FOR EACH ROW
                 BEGIN
-                    UPDATE {tableName} SET update_time = DATETIME('NOW') WHERE id = NEW.id;
+                    UPDATE {table_name} SET update_time = DATETIME('NOW') WHERE id = NEW.id;
                 END;
             ''')
 
     # 设置 openid notify_type notify_key 联合唯一索引
     cursor.execute(
-        f"CREATE UNIQUE INDEX IF NOT EXISTS idx_{tableName}_notify ON {tableName} (openid, notify_type, notify_key)")
+        f"CREATE UNIQUE INDEX IF NOT EXISTS idx_{table_name}_notify ON {table_name} (openid, notify_type, notify_key)")
 
     conn.commit()
-    logger.info(f'表 {tableName} 创建成功')
+    logger.info(f'表 {table_name} 创建成功')

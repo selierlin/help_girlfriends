@@ -1,7 +1,7 @@
 from datetime import timedelta, datetime
 
 
-def parseDay(delta_minute, match):
+def parse_day(delta_minute, match):
     day = match.group('day')
     today = datetime.now()
     target = today
@@ -18,7 +18,7 @@ def parseDay(delta_minute, match):
     delta_minute['year'] = target.year
 
 
-def parseTime(delta_minute):
+def parse_time(delta_minute):
     today = datetime.now()
     target = today
     target += timedelta(days=delta_minute['day'])
@@ -32,6 +32,7 @@ def parseTime(delta_minute):
     delta_minute['hour'] = target.hour
     delta_minute['minute'] = target.minute
     delta_minute['second'] = target.second
+
 
 def fill_delta(delta_minute):
     if delta_minute['trigger'] == 'date':

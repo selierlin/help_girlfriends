@@ -83,12 +83,12 @@ def update_job(job_id, openid, title, msg):
         return response.fail(msg='系统异常')
 
 
-def remove_job(jobId):
-    if jobId is None:
+def remove_job(job_id):
+    if job_id is None:
         return response.fail(msg='缺少参数')
     try:
         scheduler = current_app.config['scheduler']
-        scheduler.remove_job(jobId)
+        scheduler.remove_job(job_id)
     except Exception:
         return response.fail(msg='系统异常')
 
@@ -107,13 +107,8 @@ def format_job(jobs):
         return None
     array = []
     for job in jobs:
-        obj = {}
-        obj['id'] = job.id
-        obj['next_run_time'] = job.next_run_time.strftime('%Y-%m-%d %H:%M:%S')
-        obj['trigger'] = str(job.trigger)
-        obj['name'] = job.name
-        obj['args'] = job.args
-        obj['kwargs'] = job.kwargs
+        obj = {'id': job.id, 'next_run_time': job.next_run_time.strftime('%Y-%m-%d %H:%M:%S'),
+               'trigger': str(job.trigger), 'name': job.name, 'args': job.args, 'kwargs': job.kwargs}
         array.append(obj)
     return array
 

@@ -6,8 +6,8 @@ from cron import ParseStrategy
 day_key = '((?P<day>\d+)(天|日))?\s*'
 hour_key = '((?P<hour>\d+)(小时|个小时|点))?\s*'
 minute_key = '((?P<minute>\d+)(分钟|分))?\s*'
-second_key = '((?P<second>\d+)(秒|s))?\s*'
-tip_key = '(拿|叫|提醒|告诉)'
+second_key = '((?P<second>\d+)(秒|秒钟|s))?\s*'
+tip_key = '(拿|叫|提醒|告诉|)'
 action_key = '(?P<action>.+)'
 
 
@@ -44,7 +44,7 @@ class ExtractStrategy:
                 hour = int(match.group('hour') or 9)
                 minute = int(match.group('minute') or 0)
                 deal_data = {'hour': hour, 'minute': minute, 'trigger': 'date'}
-                ParseStrategy.parseDay(deal_data, match)
+                ParseStrategy.parse_day(deal_data, match)
                 action = match.group('action')
                 return deal_data, action
             # 一天后、一个小时后、5分钟后的关键字，使用 date 执行处理
@@ -56,7 +56,7 @@ class ExtractStrategy:
                 minute = int(match.group('minute') or 0)
                 second = int(match.group('second') or 0)
                 deal_data = {'hour': hour, 'minute': minute, 'second': second, 'trigger': 'date', 'day': day}
-                ParseStrategy.parseTime(deal_data)
+                ParseStrategy.parse_time(deal_data)
                 action = match.group('action')
                 return deal_data, action
 
