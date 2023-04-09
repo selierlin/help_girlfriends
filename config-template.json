@@ -1,7 +1,8 @@
 {
-  "db_path": "/Users/selier/Project/help_girlfriends/jobs.db",
-  "port": 520,
-  "we_token": "selier",
-  "APP_ID": "",
-  "APP_SECRET": ""
+  "db_path": "./jobs.db",
+  "port": 5000,
+  "we_token": "your wechat token",
+  "APP_ID": "your wechat appid",
+  "APP_SECRET": "your wechat app_secret",
+  "debug": false
 }

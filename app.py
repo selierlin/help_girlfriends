@@ -37,7 +37,7 @@ app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
 # app.config['SERVER_NAME'] = f'0.0.0.0:{config.conf().get("port")}'
 # app.config['SERVER_NAME'] = 'localhost:8080'
-app.debug = True
+app.debug = config.conf().get('debug')
 # 加载配置
 jobstores = {
     # 可以配置多个存储
@@ -57,4 +57,4 @@ createRobot()
 InitDb.initTable()
 if __name__ == '__main__':
     port = config.conf().get('port')
-    app.run()
+    app.run(host='0.0.0.0', port=port)
