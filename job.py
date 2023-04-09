@@ -20,13 +20,14 @@ def parse_job(openid, message):
     if extracted_data:
         try:
             deal_data, action = extracted_data
-            actions = ActionStrategy.parse(users_notify, action)
-            for action in actions:
-                print(f"{deal_data} {action} {message}")
-                res = add_job(openid, deal_data, action)
-                if response.is_fail(res):
-                    return "任务处理失败"
-            return "收到🫡"
+            if action and len(message) > len(action):
+                actions = ActionStrategy.parse(users_notify, action)
+                for action in actions:
+                    print(f"{deal_data} {action} {message}")
+                    res = add_job(openid, deal_data, action)
+                    if response.is_fail(res):
+                        return "任务处理失败"
+                return "收到🫡"
         except Exception as e:
             logger.error(f'解析任务失败 {e}')
     return "无法识别任务信息"
@@ -114,4 +115,5 @@ def format_job(jobs):
 
 
 if __name__ == '__main__':
-    parse_job(openid='oOy0J6Fbp9gSC8Np6PG8auZ5g3Jg', message="明天15点提醒本人记得及时出门哦，然后注意看一下有没有下雨")
+    job = parse_job(openid='oOy0J6Fbp9gSC8Np6PG8auZ5g3Jg', message="哈哈哈")
+    print(job)
