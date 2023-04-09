@@ -22,8 +22,10 @@ def parse_job(openid, message):
             deal_data, action = extracted_data
             if action and len(message) > len(action):
                 actions = ActionStrategy.parse(users_notify, action)
+                if actions is None or len(actions) == 0:
+                    return "没有找到通知对象🙅"
                 for action in actions:
-                    print(f"{deal_data} {action} {message}")
+                    logger.info(f"准备添加任务 openid={openid}, message={message}, deal_data={deal_data}, action={action} ")
                     res = add_job(openid, deal_data, action)
                     if response.is_fail(res):
                         return "任务处理失败"
@@ -64,7 +66,7 @@ def add_job(openid, deal_data, action):
         logger.info(f'添加任务成功 openid={openid}, job_id={job_id}, kwargs={kwargs}')
         return response.success()
     except Exception as e:
-        logger.error(e)
+        logger.error(f'添加任务失败 {e}')
         return response.fail(msg='添加任务失败')
 
 
@@ -113,7 +115,22 @@ def format_job(jobs):
         array.append(obj)
     return array
 
-
+# 每隔、每小时、每分钟关键字，可以使用 interval 执行处理
+# 每天X点，可以使用 cron 表达式执行处理
+# 今天、明天、后天、一个小时后、5分钟后的关键字，可以使用 date 执行处理
+#
 if __name__ == '__main__':
-    job = parse_job(openid='oOy0J6Fbp9gSC8Np6PG8auZ5g3Jg', message="哈哈哈")
-    print(job)
+    input_strs = [
+        # "明天19点15分提醒我约会",
+        # "后天提醒我出门带伞",
+        # "后天叫我出门带钥匙",
+        "明天9点叫我拿快递",
+        # "3个小时后叫我睡觉",
+        # "30分钟后告诉我敷面膜",
+        # "每隔3天提醒我浇水",
+        # "每天7点提醒我起床"
+    ]
+
+    for input_str in input_strs:
+        job = parse_job(openid='oOy0J6Fbp9gSC8Np6PG8auZ5g3Jg', message=input_str)
+        print(job)
