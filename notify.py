@@ -5,7 +5,7 @@ from pypushdeer import PushDeer
 def send_notify(openid, title, msg, create_time, notify_type, notify_key):
     try:
         logger.info(
-            f'接收发送通知 title=openid={openid}, {title}, msg={msg}, create_time={create_time}, notify_type={notify_type}'
+            f'接收发送通知 title=openid={openid}, title={title}, msg={msg}, create_time={create_time}, notify_type={notify_type}'
             f', notify_key={notify_key}')
         push_deer(notify_key, title, msg)
         logger.info(f'发送成功 openid={openid}, title={title}, msg={msg}')

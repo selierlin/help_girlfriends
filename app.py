@@ -57,4 +57,5 @@ create_robot()
 InitDb.init_table()
 if __name__ == '__main__':
     port = config.conf().get('port')
-    app.run(host='0.0.0.0', port=port)
+    # app.run(host='0.0.0.0', port=port)
+    app.run()
