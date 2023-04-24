@@ -45,16 +45,17 @@ def add_job(openid, deal_data, action):
         action_content = action['action']
         notify_type = action['notify_type']
         notify_key = action['notify_key']
+
         kwargs = {'openid': openid, 'title': action_content, 'msg': action_content, 'create_time': current,
                   'notify_type': notify_type,
                   'notify_key': notify_key, }
         my_trigger = None
         if deal_data['trigger'] == 'cron' or deal_data['trigger'] == 'date':
-            my_trigger = CronTrigger(year=deal_data['year'], month=deal_data['month'], day=deal_data['day'],
-                                     hour=deal_data['hour'], minute=deal_data.get('minute'),
+            my_trigger = CronTrigger(year=deal_data.get('year'), month=deal_data.get('month'), day=deal_data.get('day'),
+                                     hour=deal_data.get('hour'), minute=deal_data.get('minute'),
                                      second=deal_data.get('second'))
         elif deal_data['trigger'] == 'interval':
-            my_trigger = IntervalTrigger(days=deal_data['day'], hours=deal_data['hour'],
+            my_trigger = IntervalTrigger(days=deal_data.get('day'), hours=deal_data.get('hour'),
                                          minutes=deal_data.get('minute'), seconds=deal_data.get('second'))
         else:
             pass

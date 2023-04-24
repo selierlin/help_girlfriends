@@ -37,3 +37,9 @@ def parse_time(delta_minute):
 def fill_delta(delta_minute):
     if delta_minute['trigger'] == 'date':
         pass
+    elif delta_minute['trigger'] == 'cron':
+        if delta_minute['day'] is None or delta_minute['day'] <= 0:
+            delta_minute['day'] = None
+        else:
+            delta_minute['day'] = f'*/{delta_minute["day"]}'
+            pass

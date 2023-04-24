@@ -35,10 +35,28 @@ help_girlfriends 是一款基于微信公众号和推送通知的应用，旨在
 
 ## 1. 直接使用
 
-1. 在微信中搜索并关注 葫芦同学 公众号。
-2. 将女朋友的push deer添加到已注册的用户列表中。
+1. 在微信中搜索并关注 `葫芦同学` 公众号。
+2. 将女朋友的 Push deer 添加到已注册的用户列表中。
 3. 在设置页面中，选择提醒时间和频率。
 4. 等待每天的定时提醒，帮助女朋友养成好习惯。
+
+
+### Push deer获取
+
+1. 使用苹果自带相机打开，会识别到二维码
+
+![pushDeer.png](./assets/pushDeer.png)
+
+2. 点击 `设备` 右上角添加设备
+3. 点击 `key` 右上角增加一个key，点击复制。
+4. 打开公众号，输入：`绑定 key 我`，参考如下：
+
+![demo.png](assets/demo.png)
+
+> 绑定 PDU21071TSlM5sdTUDiuX4qz7NtTcaAiD5VITA8Rh 我,自己,帅哥
+> PDU21071TSlM5sdTUDiuX4qz7NtTcaAiD5VITA8Rh 为你刚刚复制从Push deer复制的key
+> 我,自己,帅哥 为你定义标签，比如：5个小时后提醒帅哥吃饭。
+
 
 ### 配置推送通知
 

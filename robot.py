@@ -42,7 +42,7 @@ def show_help(message):
 
 PS：多个标签需要用","隔开
 目前仅支持 PushDeer
-    """
+"""
 
 
 @myRobot.filter(re.compile("绑定.*"))
