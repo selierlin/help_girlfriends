@@ -43,6 +43,8 @@ help_girlfriends 是一款基于微信公众号和推送通知的应用，旨在
 
 ### Push deer获取
 
+> 安卓手机可以打开官网下载对应的apk：https://www.pushdeer.com/
+
 1. 使用苹果自带相机打开，会识别到二维码
 
 ![pushDeer.png](./assets/pushDeer.png)
