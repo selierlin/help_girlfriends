@@ -104,17 +104,19 @@ def list_job(openid):
         return response.fail(msg='缺少参数')
     scheduler = current_app.config['scheduler']
     jobs = scheduler.get_jobs()
-    job_data = format_job(jobs)
+    job_data = format_job(jobs, openid)
     return response.success(data=job_data)
 
 
-def format_job(jobs):
+def format_job(jobs, openid):
     if jobs is None:
         return None
     array = []
     for job_obj in jobs:
         # header = ['任务ID', '发送内容', '发送对象', '发送方式', '下一次触发时间', '创建时间']
         # 找到下划线的位置
+        if not job_obj.id.startWith(f'{openid}_'):
+            continue
         idx = job_obj.id.find('_')
         notify_type = "PushDeer" if job_obj.kwargs.get('notify_type') == 1 else "其他"
         next_time = job_obj.next_run_time.strftime('%Y-%m-%d %H:%M:%S') if job_obj.next_run_time else ""
