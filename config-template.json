@@ -4,5 +4,6 @@
   "we_token": "your wechat token",
   "APP_ID": "your wechat appid",
   "APP_SECRET": "your wechat app_secret",
-  "debug": false
+  "debug": false,
+  "ttf": "MSYH.TTF"
 }

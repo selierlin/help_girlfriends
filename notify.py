@@ -2,7 +2,7 @@ from log import logger
 from pypushdeer import PushDeer
 
 
-def send_notify(openid, title, msg, create_time, notify_type, notify_key):
+def send_notify(openid, title, msg, create_time, notify_type, notify_key, tags):
     try:
         logger.info(
             f'接收发送通知 title=openid={openid}, title={title}, msg={msg}, create_time={create_time}, notify_type={notify_type}'

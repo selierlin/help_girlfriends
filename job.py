@@ -25,7 +25,8 @@ def parse_job(openid, message):
                 if actions is None or len(actions) == 0:
                     return "没有找到通知对象🙅"
                 for action in actions:
-                    logger.info(f"准备添加任务 openid={openid}, message={message}, deal_data={deal_data}, action={action} ")
+                    logger.info(
+                        f"准备添加任务 openid={openid}, message={message}, deal_data={deal_data}, action={action} ")
                     res = add_job(openid, deal_data, action)
                     if response.is_fail(res):
                         return "任务处理失败"
@@ -45,10 +46,11 @@ def add_job(openid, deal_data, action):
         action_content = action['action']
         notify_type = action['notify_type']
         notify_key = action['notify_key']
+        tags = action['tags']
 
         kwargs = {'openid': openid, 'title': action_content, 'msg': action_content, 'create_time': current,
                   'notify_type': notify_type,
-                  'notify_key': notify_key, }
+                  'notify_key': notify_key, 'tags': tags}
         my_trigger = None
         if deal_data['trigger'] == 'cron' or deal_data['trigger'] == 'date':
             my_trigger = CronTrigger(year=deal_data.get('year'), month=deal_data.get('month'), day=deal_data.get('day'),
@@ -60,7 +62,7 @@ def add_job(openid, deal_data, action):
         else:
             pass
 
-        job_id = f'{openid}_{random.randrange(100, 1000)}'
+        job_id = f'{openid}_{random.randrange(100, 999)}'
         scheduler.add_job(id=job_id, func=send_notify, trigger=my_trigger,
                           name=action_content,
                           kwargs=kwargs)
@@ -111,10 +113,17 @@ def format_job(jobs):
         return None
     array = []
     for job in jobs:
-        obj = {'id': job.id, 'next_run_time': job.next_run_time.strftime('%Y-%m-%d %H:%M:%S'),
-               'trigger': str(job.trigger), 'name': job.name, 'args': job.args, 'kwargs': job.kwargs}
+        # header = ['任务ID', '发送内容', '发送对象', '发送方式', '下一次触发时间', '创建时间']
+        # 找到下划线的位置
+        idx = job.id.find('_')
+        obj = {'任务ID': job.id[idx + 1:], '下一次触发时间': job.next_run_time.strftime('%Y-%m-%d %H:%M:%S'),
+               'trigger': str(job.trigger), '发送内容': job.name, 'args': job.args,
+               '创建时间': job.kwargs.get('create_time'),
+               '发送对象': job.kwargs.get('tags'),
+               '发送方式': job.kwargs.get('notify_type')}
         array.append(obj)
     return array
+
 
 # 每隔、每小时、每分钟关键字，可以使用 interval 执行处理
 # 每天X点，可以使用 cron 表达式执行处理
