@@ -112,15 +112,17 @@ def format_job(jobs):
     if jobs is None:
         return None
     array = []
-    for job in jobs:
+    for job_obj in jobs:
         # header = ['任务ID', '发送内容', '发送对象', '发送方式', '下一次触发时间', '创建时间']
         # 找到下划线的位置
-        idx = job.id.find('_')
-        obj = {'任务ID': job.id[idx + 1:], '下一次触发时间': job.next_run_time.strftime('%Y-%m-%d %H:%M:%S'),
-               'trigger': str(job.trigger), '发送内容': job.name, 'args': job.args,
-               '创建时间': job.kwargs.get('create_time'),
-               '发送对象': job.kwargs.get('tags'),
-               '发送方式': job.kwargs.get('notify_type')}
+        idx = job_obj.id.find('_')
+        notify_type = "PushDeer" if job_obj.kwargs.get('notify_type') == 1 else "其他"
+        next_time = job_obj.next_run_time.strftime('%Y-%m-%d %H:%M:%S') if job_obj.next_run_time else ""
+        obj = {'任务ID': job_obj.id[idx + 1:], '下一次触发时间': next_time,
+               'trigger': str(job_obj.trigger), '发送内容': job_obj.name, 'args': job_obj.args,
+               '创建时间': job_obj.kwargs.get('create_time'),
+               '发送对象': job_obj.kwargs.get('tags'),
+               '发送方式': notify_type}
         array.append(obj)
     return array
 

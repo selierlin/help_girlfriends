@@ -95,7 +95,8 @@ cp config-template.json config.json
   "we_token": "your wechat token", # 微信公众号配置的token
   "APP_ID": "your wechat appid", # 微信公众号的appid
   "APP_SECRET": "your wechat app_secret", # 微信公众号的app_secret
-  "debug": false # 调试模式，默认即可
+  "debug": false, # 调试模式，默认即可m
+  "ttf": "MSYH.TTF" # 使用字体文件，生成我的任务图片的时候需要用到，可以使用绝对路径
 }
 ```
 

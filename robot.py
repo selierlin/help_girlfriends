@@ -44,9 +44,9 @@ def show_help(message):
 【4】回复：获取key
 效果：将会发送你一张图片
 【5】回复：我的任务
-【5】回复：删除任务 <任务id> <任务id>
+【6】回复：删除任务 <任务id> <任务id>
 示例：删除任务 595。多个任务用空格分割
-
+【7】回复：清空任务
 PS：多个标签需要用","隔开
 目前仅支持 PushDeer
 """
@@ -103,6 +103,22 @@ def my_task_list(message):
                 f'删除任务 openid={message.source}, 任务id={jobid}')
             job.remove_job(jobid)
         return "操作完成"
+    return "未匹配到任务"
+
+
+@myRobot.filter(re.compile("清空任务"))
+def my_task_list(message):
+    logger.info(
+        f'openid={message.source}, message={message.content}, createTime={message.CreateTime}, msgId={message.MsgId}')
+    list_job = job.list_job(message.source)
+    if list_job.get('data'):
+        # 输出所有匹配到的数字
+        for my_job in list_job.get('data'):
+            jobid = f'{message.source}_{my_job["任务ID"]}'
+            logger.info(
+                f'删除任务 openid={message.source}, 任务id={jobid}')
+            job.remove_job(jobid)
+        return "清空任务完成"
     return "未匹配到任务"
 
 
