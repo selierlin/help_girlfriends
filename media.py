@@ -3,17 +3,13 @@ from PIL import Image, ImageDraw, ImageFont
 import config
 
 
-def dict_to_table(data, filename):
+def dict_to_table(data, filename, header, header_width):
     # 设置表格样式
     font_size = 16
     cell_height = 30  # 标题高
     row_height = 30  # 行高
     line_color = (128, 128, 128)  # 文字颜色
     bg_color = (255, 255, 255)  # 背景颜色
-
-    # 定义表头和列宽
-    header = ['任务ID', '发送对象', '发送方式', '下一次触发时间', '创建时间', '发送内容']
-    header_width = [100, 100, 100, 200, 200, 300]
 
     # 计算表格的总宽度和高度
     table_width = sum(header_width) + 5
@@ -48,6 +44,7 @@ def dict_to_table(data, filename):
         # 将生成的图片保存到本地文件
         img.save(filename)
         # img.show()
+
 
 if __name__ == '__main__':
     pass

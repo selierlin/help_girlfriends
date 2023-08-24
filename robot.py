@@ -47,6 +47,7 @@ def show_help(message):
 【6】回复：删除任务 <任务id> <任务id>
 示例：删除任务 595。多个任务用空格分割
 【7】回复：清空任务
+【8】回复：删除key <key id>
 PS：多个标签需要用","隔开
 目前仅支持 PushDeer
 """
@@ -126,18 +127,75 @@ def my_task_list(message):
 def my_task_list(message):
     logger.info(
         f'openid={message.source}, message={message.content}, createTime={message.CreateTime}, msgId={message.MsgId}')
-    list_job = job.list_job(message.source)
+    job_list = job.list_job(message.source)
     logger.info(
-        f'我的任务 openid={message.source}, message={message.content}, createTime={message.CreateTime}, list_job={list_job}')
-    if list_job.get('data'):
-        img_file_name = f'./{message.source}.png'
-        media.dict_to_table(list_job['data'], img_file_name)
+        f'我的任务 openid={message.source}, message={message.content}, createTime={message.CreateTime}, job_list={job_list}')
+    if job_list.get('data'):
+        img_file_name = f'./job_{message.source}.png'
+
+        # 定义表头和列宽
+        header = ['任务ID', '发送对象', '发送方式', '下一次触发时间', '创建时间', '发送内容']
+        header_width = [100, 100, 100, 200, 200, 300]
+        media.dict_to_table(job_list['data'], img_file_name, header, header_width)
         id = get_img_media_id(img_file_name)
         reply = ImageReply(message=message, media_id=id)
         return reply
-        # return json.dumps(list_job['data']).encode('utf-8').decode('unicode_escape')
-
     return "当前没有任务"
+
+
+@myRobot.filter(re.compile("我的key"))
+def my_key_list(message):
+    logger.info(
+        f'openid={message.source}, message={message.content}, createTime={message.CreateTime}, msgId={message.MsgId}')
+    key_list = UsersNotify.list_key(message.source)
+    logger.info(
+        f'我的key openid={message.source}, message={message.content}, createTime={message.CreateTime}, key_list={key_list}')
+    if key_list:
+        format_keys = format_key(key_list)
+        img_file_name = f'./key_{message.source}.png'
+        # 定义表头和列宽
+        header = ['ID', '名称', '发送方式', '是否启用', '创建时间', 'key']
+        header_width = [80, 200, 100, 80, 200, 500]
+        media.dict_to_table(format_keys, img_file_name, header, header_width)
+        id = get_img_media_id(img_file_name)
+        reply = ImageReply(message=message, media_id=id)
+        return reply
+    return "当前没有任务"
+
+
+@myRobot.filter(re.compile("删除key.*"))
+def my_task_list(message):
+    logger.info(
+        f'openid={message.source}, message={message.content}, createTime={message.CreateTime}, msgId={message.MsgId}')
+    # 使用正则表达式匹配数字
+    num_list = re.findall(r'\d+', message.content)
+    if num_list:
+        # 输出所有匹配到的数字
+        for num in num_list:
+            logger.info(
+                f'删除Key openid={message.source}, key id={num}')
+            UsersNotify.delete_by_openid(message.source, num)
+        return "操作完成"
+    return "未匹配到Key"
+
+
+def format_key(keys):
+    if keys is None:
+        return None
+    array = []
+    for key_obj in keys:
+        # header = ['任务ID', '发送内容', '发送对象', '发送方式', '下一次触发时间', '创建时间']
+        # 找到下划线的位置
+        notify_type = "PushDeer" if key_obj[2] == 1 else "其他"
+        is_enable = "启用" if key_obj[3] == 1 else "禁用"
+        obj = {'ID': key_obj[0],
+               'key': key_obj[5],
+               '创建时间': key_obj[4],
+               '名称': key_obj[1],
+               '是否启用': is_enable,
+               '发送方式': notify_type}
+        array.append(obj)
+    return array
 
 
 # @myRobot.filter(re.compile("1"))
@@ -155,7 +213,7 @@ def hello(message):
         f'解析任务 openid={message.source}, message={message.content}, createTime={message.CreateTime}, msgId={message.MsgId}')
     parse_job = job.parse_job(message.source, message.content)
     logger.info(
-        f'解析结果：[{parse_job}] openid={message.source}, message={message.content}, createTime={message.CreateTime}, msgId={message.MsgId}')
+        f'解析结果：[{parse_job}] openid={message.source}, message={message.content}')
     return parse_job
 
 
@@ -178,5 +236,5 @@ def get_img_media_id(img_file_name):
     # media_json = myRobot.client.upload_permanent_media("image", open(r"./img_media.jpg", "rb")) ##永久素材
     media_id = media_json['media_id']
     # media_url = media_json['url']
-    print('微信素材id:', media_id)
+    logger.info('微信素材id:', media_id)
     return media_id
