@@ -236,5 +236,5 @@ def get_img_media_id(img_file_name):
     # media_json = myRobot.client.upload_permanent_media("image", open(r"./img_media.jpg", "rb")) ##永久素材
     media_id = media_json['media_id']
     # media_url = media_json['url']
-    logger.info('微信素材id:', media_id)
+    logger.info(f'微信素材id:{media_id}')
     return media_id
