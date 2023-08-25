@@ -47,7 +47,10 @@ def show_help(message):
 【6】回复：删除任务 <任务id> <任务id>
 示例：删除任务 595。多个任务用空格分割
 【7】回复：清空任务
-【8】回复：删除key <key id>
+【8】回复：我的key
+【9】回复：启用key <key id>
+【10】回复：禁用key <key id>
+【11】回复：删除key <key id>
 PS：多个标签需要用","隔开
 目前仅支持 PushDeer
 """
