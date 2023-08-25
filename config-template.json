@@ -5,5 +5,6 @@
   "APP_ID": "your wechat appid",
   "APP_SECRET": "your wechat app_secret",
   "debug": false,
-  "ttf": "MSYH.TTF"
+  "ttf": "MSYH.TTF",
+  "log_level": "logging.INFO"
 }

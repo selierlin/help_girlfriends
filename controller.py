@@ -1,8 +1,7 @@
-import response
+from utils import response, job
 
 from flask import Blueprint, request, jsonify
-import job
-from log import logger
+from utils.log_utils import log
 
 controller = Blueprint('main', __name__)
 
@@ -32,7 +31,7 @@ def update_job():
 def list_job():
     openid = request.args.get("openid")
     result = job.list_job(openid)
-    logger.info(result)
+    log.info(result)
     return result
 
 

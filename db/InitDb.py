@@ -1,18 +1,18 @@
 import sqlite3
 
-import config
-from log import logger
+from utils import config
+from utils.log_utils import log
 
 users_table_name = 'users'
 users_notify_table_name = 'users_notify'
 
 
 def get_connect():
-    return sqlite3.connect(config.conf().get("db_path"))
+    return sqlite3.connect(config.get("db_path"))
 
 
 def init_table():
-    logger.info("开始初始化表")
+    log.info("开始初始化表")
     conn = get_connect()
     # 连接到 jobs.db 数据库
     cursor = conn.cursor()
@@ -29,7 +29,7 @@ def init_users(conn, cursor):
     if not check_table_exists(cursor, users_table_name):
         create_users(conn, cursor, users_table_name)
     else:
-        logger.info(f'表 {users_table_name} 已存在')
+        log.info(f'表 {users_table_name} 已加载')
 
 
 def init_users_notify(conn, cursor):
@@ -37,7 +37,7 @@ def init_users_notify(conn, cursor):
     if not check_table_exists(cursor, users_notify_table_name):
         create_users_notify(conn, cursor, users_notify_table_name)
     else:
-        logger.info(f'表 {users_notify_table_name} 已存在')
+        log.info(f'表 {users_notify_table_name} 已加载')
 
 
 def create_users(conn, cursor, table_name):
@@ -63,7 +63,7 @@ def create_users(conn, cursor, table_name):
     cursor.execute(f"CREATE UNIQUE INDEX IF NOT EXISTS idx_{table_name}_notify ON {table_name} (openid)")
 
     conn.commit()
-    logger.info(f'表 {table_name} 创建成功')
+    log.info(f'表 {table_name} 创建成功')
 
 
 def check_table_exists(cursor, table_name):
@@ -103,4 +103,4 @@ def create_users_notify(conn, cursor, table_name):
         f"CREATE UNIQUE INDEX IF NOT EXISTS idx_{table_name}_notify ON {table_name} (openid, notify_type, notify_key)")
 
     conn.commit()
-    logger.info(f'表 {table_name} 创建成功')
+    log.info(f'表 {table_name} 创建成功')

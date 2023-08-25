@@ -2,7 +2,7 @@ from flask import Flask
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 from apscheduler.executors.pool import ProcessPoolExecutor
-import config
+from utils import config
 from controller import controller
 from pytz import timezone
 from db import InitDb
@@ -35,13 +35,13 @@ def create_robot():
 # 创建Flask
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
-# app.config['SERVER_NAME'] = f'0.0.0.0:{config.conf().get("port")}'
+# app.config['SERVER_NAME'] = f'0.0.0.0:{config.get("port")}'
 # app.config['SERVER_NAME'] = 'localhost:8080'
-app.debug = config.conf().get('debug')
+app.debug = config.get('debug')
 # 加载配置
 jobstores = {
     # 可以配置多个存储
-    'default': SQLAlchemyJobStore(url=f'sqlite:///{config.conf().get("db_path")}')  # SQLAlchemyJobStore指定存储链接
+    'default': SQLAlchemyJobStore(url=f'sqlite:///{config.get("db_path")}')  # SQLAlchemyJobStore指定存储链接
 }
 executors = {
     'default': {'type': 'threadpool', 'max_workers': 20},  # 最大工作线程数20
@@ -56,6 +56,6 @@ create_scheduler()
 create_robot()
 InitDb.init_table()
 if __name__ == '__main__':
-    port = config.conf().get('port')
+    port = config.get('port', 5000)
     app.run(host='0.0.0.0', port=port)
     # app.run()

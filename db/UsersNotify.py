@@ -1,5 +1,5 @@
 from db import InitDb
-from log import logger
+from utils.log_utils import log
 
 
 def add(openid, notify_type, notify_key, tags):
@@ -12,7 +12,7 @@ def add(openid, notify_type, notify_key, tags):
         cursor.close()
         return True
     except Exception as e:
-        logger.error(e)
+        log.error(e)
         return False
 
 
@@ -26,7 +26,7 @@ def update(openid, notify_type, notify_key, is_enable):
         cursor.close()
         return True
     except Exception as e:
-        logger.error(e)
+        log.error(e)
         return False
 
 
@@ -41,7 +41,7 @@ def delete(openid, notify_type, notify_key):
         cursor.close()
         return rowcount
     except Exception as e:
-        logger.error(e)
+        log.error(e)
         return -1
 
 
@@ -56,7 +56,22 @@ def delete_by_openid(openid, key_id):
         cursor.close()
         return rowcount
     except Exception as e:
-        logger.error(e)
+        log.error(e)
+        return -1
+
+
+def update_by_openid(openid, key_id, state):
+    try:
+        conn = InitDb.get_connect()
+        cursor = conn.cursor()
+        update_sql = f"UPDATE {InitDb.users_notify_table_name} set is_enable = ? where openid = ? AND id = ?"
+        cursor.execute(update_sql, (state, openid, key_id))
+        conn.commit()
+        rowcount = cursor.rowcount
+        cursor.close()
+        return rowcount
+    except Exception as e:
+        log.error(e)
         return -1
 
 
@@ -64,15 +79,14 @@ def find(openid):
     try:
         conn = InitDb.get_connect()
         cursor = conn.cursor()
-        select_sql = f"SELECT * FROM {InitDb.users_notify_table_name} where openid = ?"
+        select_sql = f"SELECT * FROM {InitDb.users_notify_table_name} where openid = ? and is_enable = 1"
         cursor.execute(select_sql, (openid,))
         result = cursor.fetchall()
         conn.commit()
-        rowcount = cursor.rowcount
         cursor.close()
         return result
     except Exception as e:
-        logger.error(e)
+        log.error(e)
         return None
 
 
@@ -84,9 +98,8 @@ def list_key(openid):
         cursor.execute(select_sql, (openid,))
         result = cursor.fetchall()
         conn.commit()
-        rowcount = cursor.rowcount
         cursor.close()
         return result
     except Exception as e:
-        logger.error(e)
+        log.error(e)
         return None

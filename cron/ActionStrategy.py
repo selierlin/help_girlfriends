@@ -1,6 +1,6 @@
 import re
 
-from log import logger
+from utils.log_utils import log
 
 
 def parse(users_notify, action):
@@ -13,5 +13,5 @@ def parse(users_notify, action):
                         'action': re.sub(tag, '', action, count=1)}
                 result.append(temp)
                 break
-    logger.info(f'解析用户指令 user action={action} result={result}')
+    log.info(f'解析用户指令：用户行为={action} 结果={result}')
     return result

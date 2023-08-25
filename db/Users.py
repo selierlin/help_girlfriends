@@ -1,5 +1,5 @@
 from db import InitDb
-from log import logger
+from utils.log_utils import log
 
 
 def add(openid):
@@ -12,5 +12,5 @@ def add(openid):
         cursor.close()
         return True
     except Exception as e:
-        logger.error(e)
+        log.error(e)
         return False

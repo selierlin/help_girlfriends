@@ -4,4 +4,4 @@
 config.json
 *.db
 *.sqlite3
-*.png
+temp/*.png

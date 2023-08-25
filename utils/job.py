@@ -4,10 +4,10 @@ from flask import current_app
 
 from cron import ActionStrategy
 from db import UsersNotify
-from log import logger
-from notify import send_notify
+from utils.log_utils import log
+from utils.notify import send_notify
 from datetime import datetime
-import response
+from utils import response
 import random
 from cron.ChineseParse import ExtractStrategy
 
@@ -25,14 +25,14 @@ def parse_job(openid, message):
                 if actions is None or len(actions) == 0:
                     return "没有找到通知对象🙅"
                 for action in actions:
-                    logger.info(
+                    log.info(
                         f"准备添加任务 openid={openid}, message={message}, deal_data={deal_data}, action={action} ")
                     res = add_job(openid, deal_data, action)
                     if response.is_fail(res):
                         return "任务处理失败"
                 return "收到🫡"
         except Exception as e:
-            logger.error(f'解析任务失败 {e}')
+            log.error(f'解析任务失败 {e}')
     return "无法识别任务信息"
 
 
@@ -66,10 +66,10 @@ def add_job(openid, deal_data, action):
         scheduler.add_job(id=job_id, func=send_notify, trigger=my_trigger,
                           name=action_content,
                           kwargs=kwargs)
-        logger.info(f'添加任务成功 openid={openid}, job_id={job_id}, kwargs={kwargs}')
+        log.info(f'添加任务成功 job_id={job_id}, kwargs={kwargs}')
         return response.success()
     except Exception as e:
-        logger.error(f'添加任务失败 {e}')
+        log.error(f'添加任务失败 {e}')
         return response.fail(msg='添加任务失败')
 
 
@@ -124,6 +124,25 @@ def format_job(jobs, openid):
                'trigger': str(job_obj.trigger), '发送内容': job_obj.name, 'args': job_obj.args,
                '创建时间': job_obj.kwargs.get('create_time'),
                '发送对象': job_obj.kwargs.get('tags'),
+               '发送方式': notify_type}
+        array.append(obj)
+    return array
+
+
+def format_key(keys):
+    if keys is None:
+        return None
+    array = []
+    for key_obj in keys:
+        # header = ['任务ID', '发送内容', '发送对象', '发送方式', '下一次触发时间', '创建时间']
+        # 找到下划线的位置
+        notify_type = "PushDeer" if key_obj[2] == 1 else "其他"
+        is_enable = "启用" if key_obj[3] == 1 else "禁用"
+        obj = {'ID': key_obj[0],
+               'key': key_obj[5],
+               '创建时间': key_obj[4],
+               '名称': key_obj[1],
+               '是否启用': is_enable,
                '发送方式': notify_type}
         array.append(obj)
     return array
